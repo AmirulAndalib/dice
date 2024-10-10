@@ -144,6 +144,12 @@ func TestJSONOperations(t *testing.T) {
 			getCmd:   `JSON.GET inventory $.inventory.mountain_bikes[0].price`,
 			expected: `2000`,
 		},
+		{
+			name:     "Get JSON with non-existent path",
+			setCmd:   `JSON.SET user $ ` + simpleJSON,
+			getCmd:   `JSON.GET user $.nonExistent`,
+			expected: `ERR Path '$.nonExistent' does not exist`,
+		},
 	}
 
 	// Multiple test cases will address JSON operations where the order of elements can vary, but all orders are "valid" and to be accepted
@@ -504,6 +510,14 @@ func TestJSONDelOperations(t *testing.T) {
 				"JSON.GET user $"},
 			expected: []interface{}{"OK", int64(1), `{"name":"sugar"}`},
 		},
+		{
+			name: "delete key with []",
+			commands: []string{
+				`JSON.SET data $ {"key[0]":"value","array":["a","b"]}`,
+				`JSON.DEL data ["key[0]"]`,
+				"JSON.GET data $"},
+			expected: []interface{}{"OK", int64(1), `{"array": ["a","b"]}`},
+		},
 	}
 
 	for _, tc := range testCases {
@@ -591,6 +605,13 @@ func TestJSONForgetOperations(t *testing.T) {
 				"JSON.FORGET user $.price",
 				"JSON.GET user $"},
 			expected: []interface{}{"OK", int64(1), `{"name":"sugar"}`},
+		},
+		{
+			name: "forget array element",
+			commands: []string{`JSON.SET user $ {"names":["Rahul","Tom"],"bosses":{"names":["Jerry","Rocky"],"hobby":"swim"}}`,
+				"JSON.FORGET user $.names[0]",
+				"JSON.GET user $"},
+			expected: []interface{}{"OK", int64(1), `{"names":["Tom"],"bosses":{"names":["Jerry","Rocky"],"hobby":"swim"}}`},
 		},
 	}
 
