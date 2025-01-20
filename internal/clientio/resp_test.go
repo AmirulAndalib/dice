@@ -1,18 +1,5 @@
-// This file is part of DiceDB.
-// Copyright (C) 2024 DiceDB (dicedb.io).
-//
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Affero General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Affero General Public License for more details.
-//
-// You should have received a copy of the GNU Affero General Public License
-// along with this program. If not, see <https://www.gnu.org/licenses/>.
+// Copyright (c) 2022-present, DiceDB contributors
+// All rights reserved. Licensed under the BSD 3-Clause License. See LICENSE file in the project root for full license information.
 
 package clientio_test
 
@@ -38,9 +25,12 @@ func init() {
 
 func TestSimpleStringDecode(t *testing.T) {
 	cases := map[string]string{
-		"+OK\r\n":                  "OK",
-		"+Hello\rWorld\r\n":        "Hello\rWorld",
-		"+Hello\rWorld\rAgain\r\n": "Hello\rWorld\rAgain",
+		"+OK
+":                  "OK",
+		"+HelloWorld
+":        "HelloWorld",
+		"+HelloWorldAgain
+": "HelloWorldAgain",
 	}
 	for k, v := range cases {
 		p := clientio.NewRESPParser(bytes.NewBuffer([]byte(k)))
@@ -58,7 +48,8 @@ func TestSimpleStringDecode(t *testing.T) {
 
 func TestError(t *testing.T) {
 	cases := map[string]string{
-		"-Error message\r\n": "Error message",
+		"-Error message
+": "Error message",
 	}
 	for k, v := range cases {
 		p := clientio.NewRESPParser(bytes.NewBuffer([]byte(k)))
@@ -75,8 +66,10 @@ func TestError(t *testing.T) {
 
 func TestInt64(t *testing.T) {
 	cases := map[string]int64{
-		":0\r\n":    0,
-		":1000\r\n": 1000,
+		":0
+":    0,
+		":1000
+": 1000,
 	}
 	for k, v := range cases {
 		p := clientio.NewRESPParser(bytes.NewBuffer([]byte(k)))
@@ -93,8 +86,12 @@ func TestInt64(t *testing.T) {
 
 func TestBulkStringDecode(t *testing.T) {
 	cases := map[string]string{
-		"$5\r\nhello\r\n": "hello",
-		"$0\r\n\r\n":      utils.EmptyStr,
+		"$5
+hello
+": "hello",
+		"$0
+
+":      utils.EmptyStr,
 	}
 	for k, v := range cases {
 		p := clientio.NewRESPParser(bytes.NewBuffer([]byte(k)))
@@ -111,11 +108,36 @@ func TestBulkStringDecode(t *testing.T) {
 
 func TestArrayDecode(t *testing.T) {
 	cases := map[string][]interface{}{
-		"*0\r\n":                                                   {},
-		"*2\r\n$5\r\nhello\r\n$5\r\nworld\r\n":                     {"hello", "world"},
-		"*3\r\n:1\r\n:2\r\n:3\r\n":                                 {int64(1), int64(2), int64(3)},
-		"*5\r\n:1\r\n:2\r\n:3\r\n:4\r\n$5\r\nhello\r\n":            {int64(1), int64(2), int64(3), int64(4), "hello"},
-		"*2\r\n*3\r\n:1\r\n:2\r\n:3\r\n*2\r\n+Hello\r\n-World\r\n": {[]int64{int64(1), int64(2), int64(3)}, []interface{}{"Hello", "World"}},
+		"*0
+":                                                   {},
+		"*2
+$5
+hello
+$5
+world
+":                     {"hello", "world"},
+		"*3
+:1
+:2
+:3
+":                                 {int64(1), int64(2), int64(3)},
+		"*5
+:1
+:2
+:3
+:4
+$5
+hello
+":            {int64(1), int64(2), int64(3), int64(4), "hello"},
+		"*2
+*3
+:1
+:2
+:3
+*2
++Hello
+-World
+": {[]int64{int64(1), int64(2), int64(3)}, []interface{}{"Hello", "World"}},
 	}
 	for k, v := range cases {
 		p := clientio.NewRESPParser(bytes.NewBuffer([]byte(k)))
@@ -212,11 +234,13 @@ func TestBoolean(t *testing.T) {
 	}{
 		{
 			input:  true,
-			output: []byte("+true\r\n"),
+			output: []byte("+true
+"),
 		},
 		{
 			input:  false,
-			output: []byte("+false\r\n"),
+			output: []byte("+false
+"),
 		},
 	}
 
@@ -233,11 +257,13 @@ func TestInteger(t *testing.T) {
 	}{
 		{
 			input:  10,
-			output: []byte(":10\r\n"),
+			output: []byte(":10
+"),
 		},
 		{
 			input:  -19,
-			output: []byte(":-19\r\n"),
+			output: []byte(":-19
+"),
 		},
 	}
 

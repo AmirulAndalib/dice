@@ -1,18 +1,5 @@
-// This file is part of DiceDB.
-// Copyright (C) 2024 DiceDB (dicedb.io).
-//
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Affero General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Affero General Public License for more details.
-//
-// You should have received a copy of the GNU Affero General Public License
-// along with this program. If not, see <https://www.gnu.org/licenses/>.
+// Copyright (c) 2022-present, DiceDB contributors
+// All rights reserved. Licensed under the BSD 3-Clause License. See LICENSE file in the project root for full license information.
 
 package resp
 
@@ -33,7 +20,14 @@ var getDocsTestCases = []struct {
 		"set",
 		[]interface{}{
 			"summary",
-			string("SET puts a new <key, value> pair in db as in the args\n\t\targs must contain key and value.\n\t\targs can also contain multiple options -\n\t\tEX or ex which will set the expiry time(in secs) for the key\n\t\tReturns encoded error response if at least a <key, value> pair is not part of args\n\t\tReturns encoded error response if expiry tme value in not integer\n\t\tReturns encoded OK RESP once new entry is added\n\t\tIf the key already exists then the value will be overwritten and expiry will be discarded"),
+			string("SET puts a new <key, value> pair in db as in the args
+		args must contain key and value.
+		args can also contain multiple options -
+		EX or ex which will set the expiry time(in secs) for the key
+		Returns encoded error response if at least a <key, value> pair is not part of args
+		Returns encoded error response if expiry tme value in not integer
+		Returns encoded OK RESP once new entry is added
+		If the key already exists then the value will be overwritten and expiry will be discarded"),
 			"arity", int64(-3),
 			"beginIndex", int64(1),
 			"lastIndex", int64(0),
@@ -44,7 +38,10 @@ var getDocsTestCases = []struct {
 		"get",
 		[]interface{}{
 			"summary",
-			string("GET returns the value for the queried key in args\n\t\tThe key should be the only param in args\n\t\tThe RESP value of the key is encoded and then returned\n\t\tGET returns RespNIL if key is expired or it does not exist"),
+			string("GET returns the value for the queried key in args
+		The key should be the only param in args
+		The RESP value of the key is encoded and then returned
+		GET returns RespNIL if key is expired or it does not exist"),
 			"arity", int64(2),
 			"beginIndex", int64(1),
 			"lastIndex", int64(0),
@@ -70,7 +67,14 @@ var getDocsTestCases = []struct {
 		"set",
 		[]interface{}{
 			"summary",
-			string("SET puts a new <key, value> pair in db as in the args\n\t\targs must contain key and value.\n\t\targs can also contain multiple options -\n\t\tEX or ex which will set the expiry time(in secs) for the key\n\t\tReturns encoded error response if at least a <key, value> pair is not part of args\n\t\tReturns encoded error response if expiry tme value in not integer\n\t\tReturns encoded OK RESP once new entry is added\n\t\tIf the key already exists then the value will be overwritten and expiry will be discarded"),
+			string("SET puts a new <key, value> pair in db as in the args
+		args must contain key and value.
+		args can also contain multiple options -
+		EX or ex which will set the expiry time(in secs) for the key
+		Returns encoded error response if at least a <key, value> pair is not part of args
+		Returns encoded error response if expiry tme value in not integer
+		Returns encoded OK RESP once new entry is added
+		If the key already exists then the value will be overwritten and expiry will be discarded"),
 			"arity", int64(-3),
 			"beginIndex", int64(1),
 			"lastIndex", int64(0),
@@ -80,7 +84,14 @@ var getDocsTestCases = []struct {
 		"set",
 		[]interface{}{
 			"summary",
-			string("SET puts a new <key, value> pair in db as in the args\n\t\targs must contain key and value.\n\t\targs can also contain multiple options -\n\t\tEX or ex which will set the expiry time(in secs) for the key\n\t\tReturns encoded error response if at least a <key, value> pair is not part of args\n\t\tReturns encoded error response if expiry tme value in not integer\n\t\tReturns encoded OK RESP once new entry is added\n\t\tIf the key already exists then the value will be overwritten and expiry will be discarded"),
+			string("SET puts a new <key, value> pair in db as in the args
+		args must contain key and value.
+		args can also contain multiple options -
+		EX or ex which will set the expiry time(in secs) for the key
+		Returns encoded error response if at least a <key, value> pair is not part of args
+		Returns encoded error response if expiry tme value in not integer
+		Returns encoded OK RESP once new entry is added
+		If the key already exists then the value will be overwritten and expiry will be discarded"),
 			"arity", int64(-3),
 			"beginIndex", int64(1),
 			"lastIndex", int64(0),
@@ -89,7 +100,10 @@ var getDocsTestCases = []struct {
 		[]interface{}{"get",
 			[]interface{}{
 				"summary",
-				string("GET returns the value for the queried key in args\n\t\tThe key should be the only param in args\n\t\tThe RESP value of the key is encoded and then returned\n\t\tGET returns RespNIL if key is expired or it does not exist"),
+				string("GET returns the value for the queried key in args
+		The key should be the only param in args
+		The RESP value of the key is encoded and then returned
+		GET returns RespNIL if key is expired or it does not exist"),
 				"arity", int64(2),
 				"beginIndex", int64(1),
 				"lastIndex", int64(0),

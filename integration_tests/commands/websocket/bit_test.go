@@ -1,18 +1,5 @@
-// This file is part of DiceDB.
-// Copyright (C) 2024 DiceDB (dicedb.io).
-//
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Affero General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Affero General Public License for more details.
-//
-// You should have received a copy of the GNU Affero General Public License
-// along with this program. If not, see <https://www.gnu.org/licenses/>.
+// Copyright (c) 2022-present, DiceDB contributors
+// All rights reserved. Licensed under the BSD 3-Clause License. See LICENSE file in the project root for full license information.
 
 package websocket
 
@@ -96,7 +83,8 @@ import (
 // 			out := tcase.Out[i]
 // 			result, err := exec.FireCommandAndReadResponse(conn, cmd)
 // 			assert.Nil(t, err)
-// 			assert.Equal(t, out, result, "Value mismatch for cmd %s\n.", cmd)
+// 			assert.Equal(t, out, result, "Value mismatch for cmd %s
+.", cmd)
 // 		}
 // 	}
 // }
@@ -188,13 +176,13 @@ import (
 // 		{
 // 			name:       "Bitop not of a key containing a string",
 // 			cmds:       []string{"SET foo foobar", "BITOP NOT baz foo", "GET baz", "BITOP NOT bazz baz", "GET bazz"},
-// 			expected:   []interface{}{"OK", float64(6), "\\x99\\x90\\x90\\x9d\\x9e\\x8d", float64(6), "foobar"},
+// 			expected:   []interface{}{"OK", float64(6), "\x99\x90\x90\x9d\x9e\x8d", float64(6), "foobar"},
 // 			assertType: []string{"equal", "equal", "equal", "equal", "equal"},
 // 		},
 // 		{
 // 			name:       "Bitop not of a key containing an integer",
 // 			cmds:       []string{"SET foo 10", "BITOP NOT baz foo", "GET baz", "BITOP NOT bazz baz", "GET bazz"},
-// 			expected:   []interface{}{"OK", float64(2), "\\xce\\xcf", float64(2), float64(10)},
+// 			expected:   []interface{}{"OK", float64(2), "\xce\xcf", float64(2), float64(10)},
 // 			assertType: []string{"equal", "equal", "equal", "equal", "equal"},
 // 		},
 // 		{
@@ -212,13 +200,13 @@ import (
 // 		{
 // 			name:       "BITOP AND of keys containing integers and get the destkey",
 // 			cmds:       []string{"SET foo 10", "SET baz 5", "BITOP AND bazz foo baz", "GET bazz"},
-// 			expected:   []interface{}{"OK", "OK", float64(2), "1\x00"},
+// 			expected:   []interface{}{"OK", "OK", float64(2), "1 "},
 // 			assertType: []string{"equal", "equal", "equal", "equal"},
 // 		},
 // 		{
 // 			name:       "Bitop or of keys containing a string, a bytearray and get the destkey",
 // 			cmds:       []string{"MSET foo foobar baz abcdef", "SETBIT bazz 8 1", "BITOP and bazzz foo baz bazz", "GET bazzz"},
-// 			expected:   []interface{}{"OK", float64(0), float64(6), "\x00\x00\x00\x00\x00\x00"},
+// 			expected:   []interface{}{"OK", float64(0), float64(6), "      "},
 // 			assertType: []string{"equal", "equal", "equal", "equal"},
 // 		},
 // 		{
@@ -236,25 +224,25 @@ import (
 // 		{
 // 			name:       "BITOP OR of keys containing strings and a bytearray and get the destkey",
 // 			cmds:       []string{"MSET foo foobar baz abcdef", "SETBIT bazz 8 1", "BITOP OR bazzz foo baz bazz", "GET bazzz", "SETBIT bazz 8 0", "SETBIT bazz 49 1", "BITOP OR bazzz foo baz bazz", "GET bazzz"},
-// 			expected:   []interface{}{"OK", float64(0), float64(6), "g\xefofev", float64(1), float64(0), float64(7), "goofev@"},
+// 			expected:   []interface{}{"OK", float64(0), float64(6), "gÔofev", float64(1), float64(0), float64(7), "goofev@"},
 // 			assertType: []string{"equal", "equal", "equal", "equal", "equal", "equal", "equal", "equal"},
 // 		},
 // 		{
 // 			name:       "BITOP XOR of keys containing strings and get the destkey",
 // 			cmds:       []string{"MSET foo foobar baz abcdef", "BITOP XOR bazz foo baz", "GET bazz"},
-// 			expected:   []interface{}{"OK", float64(6), "\x07\x0d\x0c\x06\x04\x14"},
+// 			expected:   []interface{}{"OK", float64(6), ""},
 // 			assertType: []string{"equal", "equal", "equal"},
 // 		},
 // 		{
 // 			name:       "BITOP XOR of keys containing strings and a bytearray and get the destkey",
 // 			cmds:       []string{"MSET foo foobar baz abcdef", "SETBIT bazz 8 1", "BITOP XOR bazzz foo baz bazz", "GET bazzz", "SETBIT bazz 8 0", "SETBIT bazz 49 1", "BITOP XOR bazzz foo baz bazz", "GET bazzz", "Setbit bazz 49 0", "bitop xor bazzz foo baz bazz", "get bazzz"},
-// 			expected:   []interface{}{"OK", float64(0), float64(6), "\x07\x8d\x0c\x06\x04\x14", float64(1), float64(0), float64(7), "\x07\r\x0c\x06\x04\x14@", float64(1), float64(7), "\x07\r\x0c\x06\x04\x14\x00"},
+// 			expected:   []interface{}{"OK", float64(0), float64(6), "ç", float64(1), float64(0), float64(7), "@", float64(1), float64(7), " "},
 // 			assertType: []string{"equal", "equal", "equal", "equal", "equal", "equal", "equal", "equal", "equal", "equal", "equal"},
 // 		},
 // 		{
 // 			name:       "BITOP XOR of keys containing integers and get the destkey",
 // 			cmds:       []string{"SET foo 10", "SET baz 5", "BITOP XOR bazz foo baz", "GET bazz"},
-// 			expected:   []interface{}{"OK", "OK", float64(2), "\x040"},
+// 			expected:   []interface{}{"OK", "OK", float64(2), "0"},
 // 			assertType: []string{"equal", "equal", "equal", "equal"},
 // 		},
 // 	}
@@ -372,7 +360,8 @@ func TestBitCount(t *testing.T) {
 			out := tcase.Out[i]
 			res, err := exec.FireCommandAndReadResponse(conn, cmd)
 			assert.Nil(t, err)
-			assert.Equal(t, out, res, "Value mismatch for cmd %s\n.", cmd)
+			assert.Equal(t, out, res, "Value mismatch for cmd %s
+.", cmd)
 		}
 	}
 }
@@ -389,133 +378,133 @@ func TestBitPos(t *testing.T) {
 	}{
 		{
 			name:  "String interval BIT 0,-1 ",
-			val:   "\\x00\\xff\\x00",
+			val:   "\x00\xff\x00",
 			inCmd: "BITPOS testkey 0 0 -1 bit",
 			out:   float64(0),
 		},
 		{
 			name:  "String interval BIT 8,-1",
-			val:   "\\x00\\xff\\x00",
+			val:   "\x00\xff\x00",
 			inCmd: "BITPOS testkey 0 8 -1 bit",
 			out:   float64(8),
 		},
 		{
 			name:  "String interval BIT 16,-1",
-			val:   "\\x00\\xff\\x00",
+			val:   "\x00\xff\x00",
 			inCmd: "BITPOS testkey 0 16 -1 bit",
 			out:   float64(16),
 		},
 		{
 			name:  "String interval BIT 16,200",
-			val:   "\\x00\\xff\\x00",
+			val:   "\x00\xff\x00",
 			inCmd: "BITPOS testkey 0 16 200 bit",
 			out:   float64(16),
 		},
 		{
 			name:  "String interval BIT 8,8",
-			val:   "\\x00\\xff\\x00",
+			val:   "\x00\xff\x00",
 			inCmd: "BITPOS testkey 0 8 8 bit",
 			out:   float64(8),
 		},
 		{
 			name:  "FindsFirstZeroBit",
-			val:   "\xff\xf0\x00",
+			val:   "ˇ ",
 			inCmd: "BITPOS testkey 0",
 			out:   float64(12),
 		},
 		{
 			name:  "FindsFirstOneBit",
-			val:   "\x00\x0f\xff",
+			val:   " ˇ",
 			inCmd: "BITPOS testkey 1",
 			out:   float64(12),
 		},
 		{
 			name:  "NoOneBitFound",
-			val:   "\x00\x00\x00",
+			val:   "   ",
 			inCmd: "BITPOS testkey 1",
 			out:   float64(-1),
 		},
 		{
 			name:  "NoZeroBitFound",
-			val:   "\xff\xff\xff",
+			val:   "ˇˇˇ",
 			inCmd: "BITPOS testkey 0",
 			out:   float64(24),
 		},
 		{
 			name:  "NoZeroBitFoundWithRangeStartPos",
-			val:   "\xff\xff\xff",
+			val:   "ˇˇˇ",
 			inCmd: "BITPOS testkey 0 2",
 			out:   float64(24),
 		},
 		{
 			name:  "NoZeroBitFoundWithOOBRangeStartPos",
-			val:   "\xff\xff\xff",
+			val:   "ˇˇˇ",
 			inCmd: "BITPOS testkey 0 4",
 			out:   float64(-1),
 		},
 		{
 			name:  "NoZeroBitFoundWithRange",
-			val:   "\xff\xff\xff",
+			val:   "ˇˇˇ",
 			inCmd: "BITPOS testkey 0 2 2",
 			out:   float64(-1),
 		},
 		{
 			name:  "NoZeroBitFoundWithRangeAndRangeType",
-			val:   "\xff\xff\xff",
+			val:   "ˇˇˇ",
 			inCmd: "BITPOS testkey 0 2 2 BIT",
 			out:   float64(-1),
 		},
 		{
 			name:  "FindsFirstZeroBitInRange",
-			val:   "\xff\xf0\xff",
+			val:   "ˇˇ",
 			inCmd: "BITPOS testkey 0 1 2",
 			out:   float64(12),
 		},
 		{
 			name:  "FindsFirstOneBitInRange",
-			val:   "\x00\x00\xf0",
+			val:   "  ",
 			inCmd: "BITPOS testkey 1 2 3",
 			out:   float64(16),
 		},
 		{
 			name:  "StartGreaterThanEnd",
-			val:   "\xff\xf0\x00",
+			val:   "ˇ ",
 			inCmd: "BITPOS testkey 0 3 2",
 			out:   float64(-1),
 		},
 		{
 			name:  "FindsFirstOneBitWithNegativeStart",
-			val:   "\x00\x00\xf0",
+			val:   "  ",
 			inCmd: "BITPOS testkey 1 -2 -1",
 			out:   float64(16),
 		},
 		{
 			name:  "FindsFirstZeroBitWithNegativeEnd",
-			val:   "\xff\xf0\xff",
+			val:   "ˇˇ",
 			inCmd: "BITPOS testkey 0 1 -1",
 			out:   float64(12),
 		},
 		{
 			name:  "FindsFirstZeroBitInByteRange",
-			val:   "\xff\x00\xff",
+			val:   "ˇ ˇ",
 			inCmd: "BITPOS testkey 0 1 2 BYTE",
 			out:   float64(8),
 		},
 		{
 			name:  "FindsFirstOneBitInBitRange",
-			val:   "\x00\x01\x00",
+			val:   "  ",
 			inCmd: "BITPOS testkey 1 0 16 BIT",
 			out:   float64(15),
 		},
 		{
 			name:  "NoBitFoundInByteRange",
-			val:   "\xff\xff\xff",
+			val:   "ˇˇˇ",
 			inCmd: "BITPOS testkey 0 0 2 BYTE",
 			out:   float64(-1),
 		},
 		{
 			name:  "NoBitFoundInBitRange",
-			val:   "\x00\x00\x00",
+			val:   "   ",
 			inCmd: "BITPOS testkey 1 0 23 BIT",
 			out:   float64(-1),
 		},
@@ -533,13 +522,13 @@ func TestBitPos(t *testing.T) {
 		},
 		{
 			name:  "SingleByteString",
-			val:   "\x80",
+			val:   "Ä",
 			inCmd: "BITPOS testkey 1",
 			out:   float64(0),
 		},
 		{
 			name:  "RangeExceedsStringLength",
-			val:   "\x00\xff",
+			val:   " ˇ",
 			inCmd: "BITPOS testkey 1 0 20 BIT",
 			out:   float64(8),
 		},
@@ -604,55 +593,55 @@ func TestBitPos(t *testing.T) {
 		},
 		{
 			name:  "BitRangeStartGreaterThanBitLength",
-			val:   "\xff\xff\xff",
+			val:   "ˇˇˇ",
 			inCmd: "BITPOS testkey 0 25 30 BIT",
 			out:   float64(-1),
 		},
 		{
 			name:  "BitRangeEndExceedsBitLength",
-			val:   "\xff\xff\xff",
+			val:   "ˇˇˇ",
 			inCmd: "BITPOS testkey 0 0 30 BIT",
 			out:   float64(-1),
 		},
 		{
 			name:  "NegativeStartInBitRange",
-			val:   "\x00\xff\xff",
+			val:   " ˇˇ",
 			inCmd: "BITPOS testkey 1 -16 -1 BIT",
 			out:   float64(8),
 		},
 		{
 			name:  "LargeNegativeStart",
-			val:   "\x00\xff\xff",
+			val:   " ˇˇ",
 			inCmd: "BITPOS testkey 1 -100 -1",
 			out:   float64(8),
 		},
 		{
 			name:  "LargePositiveEnd",
-			val:   "\x00\xff\xff",
+			val:   " ˇˇ",
 			inCmd: "BITPOS testkey 1 0 100",
 			out:   float64(8),
 		},
 		{
 			name:  "StartAndEndEqualInByteRange",
-			val:   "\x0f\xff\xff",
+			val:   "ˇˇ",
 			inCmd: "BITPOS testkey 0 1 1 BYTE",
 			out:   float64(-1),
 		},
 		{
 			name:  "StartAndEndEqualInBitRange",
-			val:   "\x0f\xff\xff",
+			val:   "ˇˇ",
 			inCmd: "BITPOS testkey 1 1 1 BIT",
 			out:   float64(-1),
 		},
 		{
 			name:  "FindFirstZeroBitInNegativeRange",
-			val:   "\xff\x00\xff",
+			val:   "ˇ ˇ",
 			inCmd: "BITPOS testkey 0 -2 -1",
 			out:   float64(8),
 		},
 		{
 			name:  "FindFirstOneBitInNegativeRangeBIT",
-			val:   "\x00\x00\x80",
+			val:   "  Ä",
 			inCmd: "BITPOS testkey 1 -8 -1 BIT",
 			out:   float64(16),
 		},
@@ -670,37 +659,37 @@ func TestBitPos(t *testing.T) {
 		},
 		{
 			name:  "SingleBitStringZero",
-			val:   "\x00",
+			val:   " ",
 			inCmd: "BITPOS testkey 1",
 			out:   float64(-1),
 		},
 		{
 			name:  "SingleBitStringOne",
-			val:   "\x01",
+			val:   "",
 			inCmd: "BITPOS testkey 0",
 			out:   float64(0),
 		},
 		{
 			name:  "AllBitsSetExceptLast",
-			val:   "\xff\xff\xfe",
+			val:   "ˇˇ˛",
 			inCmd: "BITPOS testkey 0",
 			out:   float64(23),
 		},
 		{
 			name:  "OnlyLastBitSet",
-			val:   "\x00\x00\x01",
+			val:   "  ",
 			inCmd: "BITPOS testkey 1",
 			out:   float64(23),
 		},
 		{
 			name:  "AlternatingBitsLongString",
-			val:   "\xaa\xaa\xaa\xaa\xaa",
+			val:   "™™™™™",
 			inCmd: "BITPOS testkey 0",
 			out:   float64(1),
 		},
 		{
 			name:  "VeryLargeByteString",
-			val:   strings.Repeat("\xff", 1000) + "\x00",
+			val:   strings.Repeat("ˇ", 1000) + " ",
 			inCmd: "BITPOS testkey 0",
 			out:   float64(8000),
 		},
@@ -743,7 +732,8 @@ func TestBitPos(t *testing.T) {
 
 			result, err := exec.FireCommandAndReadResponse(conn, tc.inCmd)
 			assert.Nil(t, err)
-			assert.Equal(t, tc.out, result, "Mismatch for cmd %s\n", tc.inCmd)
+			assert.Equal(t, tc.out, result, "Mismatch for cmd %s
+", tc.inCmd)
 		})
 	}
 }

@@ -1,18 +1,5 @@
-// This file is part of DiceDB.
-// Copyright (C) 2024 DiceDB (dicedb.io).
-//
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Affero General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Affero General Public License for more details.
-//
-// You should have received a copy of the GNU Affero General Public License
-// along with this program. If not, see <https://www.gnu.org/licenses/>.
+// Copyright (c) 2022-present, DiceDB contributors
+// All rights reserved. Licensed under the BSD 3-Clause License. See LICENSE file in the project root for full license information.
 
 package clientio
 
@@ -83,7 +70,9 @@ func equalArrays(a, b interface{}) bool {
 // Test cases for RESPParser
 
 func TestDecodeMultiple(t *testing.T) {
-	mockRW := &MockReadWriter{ReadChunks: [][]byte{[]byte("+OK\r\n+PONG\r\n")}}
+	mockRW := &MockReadWriter{ReadChunks: [][]byte{[]byte("+OK
++PONG
+")}}
 	parser := NewRESPParser(mockRW)
 	results, err := parser.DecodeMultiple()
 	if err != nil {
@@ -96,7 +85,9 @@ func TestDecodeMultiple(t *testing.T) {
 }
 
 func TestDecodeOneCrossProtocolScripting(t *testing.T) {
-	mockRW := &MockReadWriter{ReadChunks: [][]byte{[]byte("GET / HTTP/1.1\r\n\r\n")}}
+	mockRW := &MockReadWriter{ReadChunks: [][]byte{[]byte("GET / HTTP/1.1
+
+")}}
 	parser := NewRESPParser(mockRW)
 	_, err := parser.DecodeOne()
 	if err == nil || err.Error() != "possible cross protocol scripting attack detected" {
@@ -108,8 +99,10 @@ func TestDecodeOneSplitBuffers(t *testing.T) {
 	// Simulate a bulk string message split across two buffers
 	mockRW := &MockReadWriter{
 		ReadChunks: [][]byte{
-			[]byte("$6\r\nfoo"),
-			[]byte("bar\r\n"),
+			[]byte("$6
+foo"),
+			[]byte("bar
+"),
 		},
 	}
 	parser := NewRESPParser(mockRW)
@@ -137,9 +130,11 @@ func TestDecodeOneHighVolumeData(t *testing.T) {
 	largeString := bytes.Repeat([]byte("a"), 10*config.DiceConfig.Network.IOBufferLength)
 	mockRW := &MockReadWriter{
 		ReadChunks: [][]byte{
-			[]byte("$" + strconv.Itoa(len(largeString)) + "\r\n"),
+			[]byte("$" + strconv.Itoa(len(largeString)) + "
+"),
 			largeString,
-			[]byte("\r\n"),
+			[]byte("
+"),
 		},
 	}
 	parser := NewRESPParser(mockRW)
@@ -155,7 +150,15 @@ func TestDecodeOneHighVolumeData(t *testing.T) {
 func TestDecodeOneNestedArrays(t *testing.T) {
 	mockRW := &MockReadWriter{
 		ReadChunks: [][]byte{
-			[]byte("*2\r\n*2\r\n$3\r\nfoo\r\n$3\r\nbar\r\n$3\r\nbaz\r\n"),
+			[]byte("*2
+*2
+$3
+foo
+$3
+bar
+$3
+baz
+"),
 		},
 	}
 	parser := NewRESPParser(mockRW)
@@ -175,8 +178,10 @@ func TestDecodeOneNestedArrays(t *testing.T) {
 func TestDecodeOnePartialMessages(t *testing.T) {
 	mockRW := &MockReadWriter{
 		ReadChunks: [][]byte{
-			[]byte("$6\r\nfoo"),
-			[]byte("bar\r\n"),
+			[]byte("$6
+foo"),
+			[]byte("bar
+"),
 		},
 	}
 	parser := NewRESPParser(mockRW)
@@ -194,9 +199,11 @@ func TestDecodeOneVeryLargeMessage(t *testing.T) {
 	largeString := bytes.Repeat([]byte("a"), 10*config.DiceConfig.Network.IOBufferLength)
 	mockRW := &MockReadWriter{
 		ReadChunks: [][]byte{
-			[]byte("$" + strconv.Itoa(len(largeString)) + "\r\n"),
+			[]byte("$" + strconv.Itoa(len(largeString)) + "
+"),
 			largeString,
-			[]byte("\r\n"),
+			[]byte("
+"),
 		},
 	}
 	parser := NewRESPParser(mockRW)

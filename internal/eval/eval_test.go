@@ -1,18 +1,5 @@
-// This file is part of DiceDB.
-// Copyright (C) 2024 DiceDB (dicedb.io).
-//
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Affero General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Affero General Public License for more details.
-//
-// You should have received a copy of the GNU Affero General Public License
-// along with this program. If not, see <https://www.gnu.org/licenses/>.
+// Copyright (c) 2022-present, DiceDB contributors
+// All rights reserved. Licensed under the BSD 3-Clause License. See LICENSE file in the project root for full license information.
 
 package eval
 
@@ -169,10 +156,15 @@ func TestEval(t *testing.T) {
 
 func testEvalPING(t *testing.T, store *dstore.Store) {
 	tests := map[string]evalTestCase{
-		"nil value":            {input: nil, output: []byte("+PONG\r\n")},
-		"empty args":           {input: []string{}, output: []byte("+PONG\r\n")},
-		"one value":            {input: []string{"HEY"}, output: []byte("$3\r\nHEY\r\n")},
-		"more than one values": {input: []string{"HEY", "HELLO"}, output: []byte("-ERR wrong number of arguments for 'ping' command\r\n")},
+		"nil value":            {input: nil, output: []byte("+PONG
+")},
+		"empty args":           {input: []string{}, output: []byte("+PONG
+")},
+		"one value":            {input: []string{"HEY"}, output: []byte("$3
+HEY
+")},
+		"more than one values": {input: []string{"HEY", "HELLO"}, output: []byte("-ERR wrong number of arguments for 'ping' command
+")},
 	}
 
 	runEvalTests(t, tests, evalPING, store)
@@ -180,10 +172,15 @@ func testEvalPING(t *testing.T, store *dstore.Store) {
 
 func testEvalECHO(t *testing.T, store *dstore.Store) {
 	tests := map[string]evalTestCase{
-		"nil value":            {input: nil, output: []byte("-ERR wrong number of arguments for 'echo' command\r\n")},
-		"empty args":           {input: []string{}, output: []byte("-ERR wrong number of arguments for 'echo' command\r\n")},
-		"one value":            {input: []string{"HEY"}, output: []byte("$3\r\nHEY\r\n")},
-		"more than one values": {input: []string{"HEY", "HELLO"}, output: []byte("-ERR wrong number of arguments for 'echo' command\r\n")},
+		"nil value":            {input: nil, output: []byte("-ERR wrong number of arguments for 'echo' command
+")},
+		"empty args":           {input: []string{}, output: []byte("-ERR wrong number of arguments for 'echo' command
+")},
+		"one value":            {input: []string{"HEY"}, output: []byte("$3
+HEY
+")},
+		"more than one values": {input: []string{"HEY", "HELLO"}, output: []byte("-ERR wrong number of arguments for 'echo' command
+")},
 	}
 
 	runEvalTests(t, tests, evalECHO, store)
@@ -204,7 +201,8 @@ func testEvalHELLO(t *testing.T, store *dstore.Store) {
 		"nil value":            {input: nil, output: clientio.Encode(resp, false)},
 		"empty args":           {input: []string{}, output: clientio.Encode(resp, false)},
 		"one value":            {input: []string{"HEY"}, output: clientio.Encode(resp, false)},
-		"more than one values": {input: []string{"HEY", "HELLO"}, output: []byte("-ERR wrong number of arguments for 'hello' command\r\n")},
+		"more than one values": {input: []string{"HEY", "HELLO"}, output: []byte("-ERR wrong number of arguments for 'hello' command
+")},
 	}
 
 	runEvalTests(t, tests, evalHELLO, store)
@@ -1284,7 +1282,8 @@ func testEvalJSONARRLEN(t *testing.T, store *dstore.Store) {
 		"nil value": {
 			setup:  func() {},
 			input:  nil,
-			output: []byte("-ERR wrong number of arguments for 'json.arrlen' command\r\n"),
+			output: []byte("-ERR wrong number of arguments for 'json.arrlen' command
+"),
 			migratedOutput: EvalResponse{
 				Result: nil,
 				Error:  diceerrors.ErrWrongArgumentCount("JSON.ARRLEN"),
@@ -1293,7 +1292,8 @@ func testEvalJSONARRLEN(t *testing.T, store *dstore.Store) {
 		"key does not exist": {
 			setup:  func() {},
 			input:  []string{"NONEXISTENT_KEY"},
-			output: []byte("$-1\r\n"),
+			output: []byte("$-1
+"),
 			migratedOutput: EvalResponse{
 				Result: clientio.NIL,
 				Error:  nil,
@@ -1309,7 +1309,8 @@ func testEvalJSONARRLEN(t *testing.T, store *dstore.Store) {
 				store.Put(key, obj)
 			},
 			input:  []string{"EXISTING_KEY"},
-			output: []byte("-ERR Path '$' does not exist or not an array\r\n"),
+			output: []byte("-ERR Path '$' does not exist or not an array
+"),
 			migratedOutput: EvalResponse{
 				Result: nil,
 				Error:  diceerrors.ErrWrongTypeOperation,
@@ -1325,7 +1326,8 @@ func testEvalJSONARRLEN(t *testing.T, store *dstore.Store) {
 				store.Put(key, obj)
 			},
 			input:  []string{"EXISTING_KEY"},
-			output: []byte(":3\r\n"),
+			output: []byte(":3
+"),
 			migratedOutput: EvalResponse{
 				Result: 3,
 				Error:  nil,
@@ -1342,7 +1344,13 @@ func testEvalJSONARRLEN(t *testing.T, store *dstore.Store) {
 			},
 
 			input:  []string{"EXISTING_KEY", "$.*"},
-			output: []byte("*5\r\n$-1\r\n$-1\r\n$-1\r\n$-1\r\n$-1\r\n"),
+			output: []byte("*5
+$-1
+$-1
+$-1
+$-1
+$-1
+"),
 			migratedOutput: EvalResponse{
 				Result: []interface{}{clientio.NIL, clientio.NIL, clientio.NIL, clientio.NIL, clientio.NIL},
 				Error:  nil,
@@ -1360,7 +1368,8 @@ func testEvalJSONARRLEN(t *testing.T, store *dstore.Store) {
 			},
 
 			input:  []string{"EXISTING_KEY", "$.language"},
-			output: []byte(":2\r\n"),
+			output: []byte(":2
+"),
 			migratedOutput: EvalResponse{
 				Result: 2,
 				Error:  nil,
@@ -2329,7 +2338,9 @@ func testEvalJSONARRAPPEND(t *testing.T, store *dstore.Store) {
 				store.Put(key, obj)
 			},
 			input:  []string{"array", "$.a", "6"},
-			output: []byte("*1\r\n$-1\r\n"),
+			output: []byte("*1
+$-1
+"),
 			migratedOutput: EvalResponse{
 				Result: nil,
 				Error:  diceerrors.ErrJSONPathNotFound("$.a"),
@@ -2345,7 +2356,9 @@ func testEvalJSONARRAPPEND(t *testing.T, store *dstore.Store) {
 				store.Put(key, obj)
 			},
 			input:  []string{"array", "$.a", "6"},
-			output: []byte("*1\r\n:3\r\n"),
+			output: []byte("*1
+:3
+"),
 			migratedOutput: EvalResponse{
 				Result: []int64{3},
 				Error:  nil,
@@ -2361,7 +2374,9 @@ func testEvalJSONARRAPPEND(t *testing.T, store *dstore.Store) {
 				store.Put(key, obj)
 			},
 			input:  []string{"array", "$.a", "6", "7", "8"},
-			output: []byte("*1\r\n:5\r\n"),
+			output: []byte("*1
+:5
+"),
 			migratedOutput: EvalResponse{
 				Result: []int64{5},
 				Error:  nil,
@@ -2377,7 +2392,9 @@ func testEvalJSONARRAPPEND(t *testing.T, store *dstore.Store) {
 				store.Put(key, obj)
 			},
 			input:  []string{"array", "$.b", `"d"`},
-			output: []byte("*1\r\n:3\r\n"),
+			output: []byte("*1
+:3
+"),
 			migratedOutput: EvalResponse{
 				Result: []int64{3},
 				Error:  nil,
@@ -2393,7 +2410,9 @@ func testEvalJSONARRAPPEND(t *testing.T, store *dstore.Store) {
 				store.Put(key, obj)
 			},
 			input:  []string{"array", "$.a", "[1,2,3]"},
-			output: []byte("*1\r\n:2\r\n"),
+			output: []byte("*1
+:2
+"),
 			migratedOutput: EvalResponse{
 				Result: []int64{2},
 				Error:  nil,
@@ -2409,7 +2428,9 @@ func testEvalJSONARRAPPEND(t *testing.T, store *dstore.Store) {
 				store.Put(key, obj)
 			},
 			input:  []string{"array", "$.a", "{\"c\": 3}"},
-			output: []byte("*1\r\n:2\r\n"),
+			output: []byte("*1
+:2
+"),
 			migratedOutput: EvalResponse{
 				Result: []int64{2},
 				Error:  nil,
@@ -2425,7 +2446,10 @@ func testEvalJSONARRAPPEND(t *testing.T, store *dstore.Store) {
 				store.Put(key, obj)
 			},
 			input:  []string{"array", "$..a", "6"},
-			output: []byte("*2\r\n:2\r\n:3\r\n"),
+			output: []byte("*2
+:2
+:3
+"),
 			migratedOutput: EvalResponse{
 				Result: []int64{2, 3},
 				Error:  nil,
@@ -2441,7 +2465,9 @@ func testEvalJSONARRAPPEND(t *testing.T, store *dstore.Store) {
 				store.Put(key, obj)
 			},
 			input:  []string{"array", "$", "6"},
-			output: []byte("*1\r\n:4\r\n"),
+			output: []byte("*1
+:4
+"),
 			migratedOutput: EvalResponse{
 				Result: []int64{4},
 				Error:  nil,
@@ -2457,7 +2483,9 @@ func testEvalJSONARRAPPEND(t *testing.T, store *dstore.Store) {
 				store.Put(key, obj)
 			},
 			input:  []string{"array", "$.a", `"blue"`},
-			output: []byte("*1\r\n:3\r\n"),
+			output: []byte("*1
+:3
+"),
 			migratedOutput: EvalResponse{
 				Result: []int64{3},
 				Error:  nil,
@@ -2526,7 +2554,8 @@ func testEvalJSONTOGGLE(t *testing.T, store *dstore.Store) {
 				var rootData interface{}
 				err := sonic.Unmarshal([]byte(value), &rootData)
 				if err != nil {
-					fmt.Printf("Debug: Error unmarshaling JSON: %v\n", err)
+					fmt.Printf("Debug: Error unmarshaling JSON: %v
+", err)
 				}
 				obj := store.NewObj(rootData, -1, object.ObjTypeJSON)
 				store.Put(key, obj)
@@ -2545,7 +2574,8 @@ func testEvalJSONTOGGLE(t *testing.T, store *dstore.Store) {
 				var rootData interface{}
 				err := sonic.Unmarshal([]byte(value), &rootData)
 				if err != nil {
-					fmt.Printf("Debug: Error unmarshaling JSON: %v\n", err)
+					fmt.Printf("Debug: Error unmarshaling JSON: %v
+", err)
 				}
 				obj := store.NewObj(rootData, -1, object.ObjTypeJSON)
 				store.Put(key, obj)
@@ -3631,7 +3661,8 @@ func testEvalHEXISTS(t *testing.T, store *dstore.Store) {
 			if responseBytes, ok := response.Result.([]byte); ok && tt.migratedOutput.Result != nil {
 				// If has result
 				if expectedBytes, ok := tt.migratedOutput.Result.([]byte); ok {
-					// fmt.Printf("%v | %v\n", responseBytes, expectedBytes)
+					// fmt.Printf("%v | %v
+", responseBytes, expectedBytes)
 					assert.True(t, bytes.Equal(responseBytes, expectedBytes), "expected and actual byte slices should be equal")
 				}
 			} else {
@@ -4701,16 +4732,19 @@ func testEvalHKEYS(t *testing.T, store *dstore.Store) {
 
 			response := evalHKEYS(tt.input, store)
 
-			// fmt.Printf("EvalReponse: %v\n", response)
+			// fmt.Printf("EvalReponse: %v
+", response)
 
 			// Handle comparison for byte slices
 			if responseBytes, ok := response.Result.([]byte); ok && tt.migratedOutput.Result != nil {
 				if expectedBytes, ok := tt.migratedOutput.Result.([]byte); ok {
-					// fmt.Printf("G: %v | %v\n", responseBytes, expectedBytes)
+					// fmt.Printf("G: %v | %v
+", responseBytes, expectedBytes)
 					assert.True(t, bytes.Equal(responseBytes, expectedBytes), "expected and actual byte slices should be equal")
 				}
 			} else {
-				// fmt.Printf("G1: %v | %v\n", response.Result, tt.migratedOutput.Result)
+				// fmt.Printf("G1: %v | %v
+", response.Result, tt.migratedOutput.Result)
 				switch e := tt.migratedOutput.Result.(type) {
 				case []interface{}, []string:
 					assert.ElementsMatch(t, e, response.Result)
@@ -4720,7 +4754,8 @@ func testEvalHKEYS(t *testing.T, store *dstore.Store) {
 			}
 
 			if tt.migratedOutput.Error != nil {
-				// fmt.Printf("E: %v | %v\n", response.Error, tt.migratedOutput.Error.Error())
+				// fmt.Printf("E: %v | %v
+", response.Error, tt.migratedOutput.Error.Error())
 				assert.EqualError(t, response.Error, tt.migratedOutput.Error.Error())
 			} else {
 				assert.NoError(t, response.Error)
@@ -5114,7 +5149,8 @@ func testEvalJSONARRPOP(t *testing.T, store *dstore.Store) {
 		"wrong number of args passed": {
 			setup:  func() {},
 			input:  nil,
-			output: []byte("-ERR wrong number of arguments for 'json.arrpop' command\r\n"),
+			output: []byte("-ERR wrong number of arguments for 'json.arrpop' command
+"),
 			migratedOutput: EvalResponse{
 				Result: nil,
 				Error:  diceerrors.ErrWrongArgumentCount("JSON.ARRPOP"),
@@ -5123,7 +5159,8 @@ func testEvalJSONARRPOP(t *testing.T, store *dstore.Store) {
 		"key does not exist": {
 			setup:  func() {},
 			input:  []string{"NOTEXISTANT_KEY"},
-			output: []byte("-ERR could not perform this operation on a key that doesn't exist\r\n"),
+			output: []byte("-ERR could not perform this operation on a key that doesn't exist
+"),
 			migratedOutput: EvalResponse{
 				Result: nil,
 				Error:  diceerrors.ErrKeyNotFound,
@@ -5139,7 +5176,8 @@ func testEvalJSONARRPOP(t *testing.T, store *dstore.Store) {
 				store.Put(key, obj)
 			},
 			input:  []string{"MOCK_KEY"},
-			output: []byte("-ERR Path '$' does not exist or not an array\r\n"),
+			output: []byte("-ERR Path '$' does not exist or not an array
+"),
 			migratedOutput: EvalResponse{
 				Result: nil,
 				Error:  diceerrors.ErrWrongTypeOperation,
@@ -5155,7 +5193,9 @@ func testEvalJSONARRPOP(t *testing.T, store *dstore.Store) {
 				store.Put(key, obj)
 			},
 			input:  []string{"MOCK_KEY", "$.b"},
-			output: []byte("*1\r\n$-1\r\n"),
+			output: []byte("*1
+$-1
+"),
 			migratedOutput: EvalResponse{
 				Result: []interface{}{clientio.NIL},
 				Error:  nil,
@@ -5171,7 +5211,10 @@ func testEvalJSONARRPOP(t *testing.T, store *dstore.Store) {
 				store.Put(key, obj)
 			},
 			input:  []string{"MOCK_KEY", "$.*"},
-			output: []byte("*2\r\n$-1\r\n$-1\r\n"),
+			output: []byte("*2
+$-1
+$-1
+"),
 			migratedOutput: EvalResponse{
 				Result: []interface{}{clientio.NIL, clientio.NIL},
 				Error:  nil,
@@ -5187,7 +5230,8 @@ func testEvalJSONARRPOP(t *testing.T, store *dstore.Store) {
 				store.Put(key, obj)
 			},
 			input:  []string{"MOCK_KEY"},
-			output: []byte(":5\r\n"),
+			output: []byte(":5
+"),
 			migratedOutput: EvalResponse{
 				Result: float64(5),
 				Error:  nil,
@@ -5203,7 +5247,8 @@ func testEvalJSONARRPOP(t *testing.T, store *dstore.Store) {
 				store.Put(key, obj)
 			},
 			input:  []string{"MOCK_KEY", "$", "2"},
-			output: []byte(":2\r\n"),
+			output: []byte(":2
+"),
 			migratedOutput: EvalResponse{
 				Result: float64(2),
 				Error:  nil,
@@ -5219,7 +5264,8 @@ func testEvalJSONARRPOP(t *testing.T, store *dstore.Store) {
 				store.Put(key, obj)
 			},
 			input:  []string{"MOCK_KEY", "$", "10"},
-			output: []byte(":5\r\n"),
+			output: []byte(":5
+"),
 			migratedOutput: EvalResponse{
 				Result: float64(5),
 				Error:  nil,
@@ -5235,7 +5281,8 @@ func testEvalJSONARRPOP(t *testing.T, store *dstore.Store) {
 				store.Put(key, obj)
 			},
 			input:  []string{"MOCK_KEY", "$", "-2"},
-			output: []byte(":4\r\n"),
+			output: []byte(":4
+"),
 			migratedOutput: EvalResponse{
 				Result: float64(4),
 				Error:  nil,
@@ -5251,7 +5298,8 @@ func testEvalJSONARRPOP(t *testing.T, store *dstore.Store) {
 				store.Put(key, obj)
 			},
 			input:  []string{"MOCK_KEY", "$", "-10"},
-			output: []byte(":0\r\n"),
+			output: []byte(":0
+"),
 			migratedOutput: EvalResponse{
 				Result: float64(0),
 				Error:  nil,
@@ -5267,7 +5315,8 @@ func testEvalJSONARRPOP(t *testing.T, store *dstore.Store) {
 				store.Put(key, obj)
 			},
 			input:  []string{"MOCK_KEY", "$", "2"},
-			output: []byte(":0\r\n"),
+			output: []byte(":0
+"),
 			newValidator: func(output interface{}) {
 				key := "MOCK_KEY"
 				obj := store.Get(key)
@@ -5290,7 +5339,9 @@ func testEvalJSONARRPOP(t *testing.T, store *dstore.Store) {
 				store.Put(key, obj)
 			},
 			input:  []string{"MOCK_KEY", "$.b", "2"},
-			output: []byte("*1\r\n:2\r\n"),
+			output: []byte("*1
+:2
+"),
 			newValidator: func(output interface{}) {
 				key := "MOCK_KEY"
 				path := "$.b"
@@ -5424,7 +5475,9 @@ func testEvalCOMMAND(t *testing.T, store *dstore.Store) {
 		"command help": {
 			input: []string{"HELP"},
 			migratedOutput: EvalResponse{
-				Result: []string([]string{"COMMAND <subcommand> [<arg> [value] [opt] ...]. Subcommands are:", "(no subcommand)", "     Return details about all DiceDB commands.", "COUNT", "     Return the total number of commands in this DiceDB server.", "LIST", "     Return a list of all commands in this DiceDB server.", "INFO [<command-name> ...]", "     Return details about the specified DiceDB commands. If no command names are given, documentation details for all commands are returned.", "DOCS [<command-name> ...]", "\tReturn documentation details about multiple diceDB commands.\n\tIf no command names are given, documentation details for all\n\tcommands are returned.", "GETKEYS <full-command>", "     Return the keys from a full DiceDB command.", "HELP", "     Print this help."}),
+				Result: []string([]string{"COMMAND <subcommand> [<arg> [value] [opt] ...]. Subcommands are:", "(no subcommand)", "     Return details about all DiceDB commands.", "COUNT", "     Return the total number of commands in this DiceDB server.", "LIST", "     Return a list of all commands in this DiceDB server.", "INFO [<command-name> ...]", "     Return details about the specified DiceDB commands. If no command names are given, documentation details for all commands are returned.", "DOCS [<command-name> ...]", "	Return documentation details about multiple diceDB commands.
+	If no command names are given, documentation details for all
+	commands are returned.", "GETKEYS <full-command>", "     Return the keys from a full DiceDB command.", "HELP", "     Print this help."}),
 				Error:  nil,
 			},
 		},
@@ -5529,14 +5582,24 @@ func testEvalCOMMAND(t *testing.T, store *dstore.Store) {
 		"command docs valid command SET": {
 			input: []string{"DOCS", "SET"},
 			migratedOutput: EvalResponse{
-				Result: []interface{}([]interface{}{[]interface{}{"set", []interface{}{"summary", "SET puts a new <key, value> pair in db as in the args\n\t\targs must contain key and value.\n\t\targs can also contain multiple options -\n\t\tEX or ex which will set the expiry time(in secs) for the key\n\t\tReturns encoded error response if at least a <key, value> pair is not part of args\n\t\tReturns encoded error response if expiry tme value in not integer\n\t\tReturns encoded OK RESP once new entry is added\n\t\tIf the key already exists then the value will be overwritten and expiry will be discarded", "arity", -3, "beginIndex", 1, "lastIndex", 0, "step", 0}}}),
+				Result: []interface{}([]interface{}{[]interface{}{"set", []interface{}{"summary", "SET puts a new <key, value> pair in db as in the args
+		args must contain key and value.
+		args can also contain multiple options -
+		EX or ex which will set the expiry time(in secs) for the key
+		Returns encoded error response if at least a <key, value> pair is not part of args
+		Returns encoded error response if expiry tme value in not integer
+		Returns encoded OK RESP once new entry is added
+		If the key already exists then the value will be overwritten and expiry will be discarded", "arity", -3, "beginIndex", 1, "lastIndex", 0, "step", 0}}}),
 				Error:  nil,
 			},
 		},
 		"command docs valid command GET": {
 			input: []string{"DOCS", "GET"},
 			migratedOutput: EvalResponse{
-				Result: []interface{}([]interface{}{[]interface{}{"get", []interface{}{"summary", "GET returns the value for the queried key in args\n\t\tThe key should be the only param in args\n\t\tThe RESP value of the key is encoded and then returned\n\t\tGET returns RespNIL if key is expired or it does not exist", "arity", 2, "beginIndex", 1, "lastIndex", 0, "step", 0}}}),
+				Result: []interface{}([]interface{}{[]interface{}{"get", []interface{}{"summary", "GET returns the value for the queried key in args
+		The key should be the only param in args
+		The RESP value of the key is encoded and then returned
+		GET returns RespNIL if key is expired or it does not exist", "arity", 2, "beginIndex", 1, "lastIndex", 0, "step", 0}}}),
 				Error:  nil,
 			},
 		},
@@ -5550,7 +5613,17 @@ func testEvalCOMMAND(t *testing.T, store *dstore.Store) {
 		"command docs multiple valid commands": {
 			input: []string{"DOCS", "SET", "GET"},
 			migratedOutput: EvalResponse{
-				Result: []interface{}([]interface{}{[]interface{}{"set", []interface{}{"summary", "SET puts a new <key, value> pair in db as in the args\n\t\targs must contain key and value.\n\t\targs can also contain multiple options -\n\t\tEX or ex which will set the expiry time(in secs) for the key\n\t\tReturns encoded error response if at least a <key, value> pair is not part of args\n\t\tReturns encoded error response if expiry tme value in not integer\n\t\tReturns encoded OK RESP once new entry is added\n\t\tIf the key already exists then the value will be overwritten and expiry will be discarded", "arity", -3, "beginIndex", 1, "lastIndex", 0, "step", 0}}, []interface{}{"get", []interface{}{"summary", "GET returns the value for the queried key in args\n\t\tThe key should be the only param in args\n\t\tThe RESP value of the key is encoded and then returned\n\t\tGET returns RespNIL if key is expired or it does not exist", "arity", 2, "beginIndex", 1, "lastIndex", 0, "step", 0}}}),
+				Result: []interface{}([]interface{}{[]interface{}{"set", []interface{}{"summary", "SET puts a new <key, value> pair in db as in the args
+		args must contain key and value.
+		args can also contain multiple options -
+		EX or ex which will set the expiry time(in secs) for the key
+		Returns encoded error response if at least a <key, value> pair is not part of args
+		Returns encoded error response if expiry tme value in not integer
+		Returns encoded OK RESP once new entry is added
+		If the key already exists then the value will be overwritten and expiry will be discarded", "arity", -3, "beginIndex", 1, "lastIndex", 0, "step", 0}}, []interface{}{"get", []interface{}{"summary", "GET returns the value for the queried key in args
+		The key should be the only param in args
+		The RESP value of the key is encoded and then returned
+		GET returns RespNIL if key is expired or it does not exist", "arity", 2, "beginIndex", 1, "lastIndex", 0, "step", 0}}}),
 				Error:  nil,
 			},
 		},
@@ -5564,7 +5637,14 @@ func testEvalCOMMAND(t *testing.T, store *dstore.Store) {
 		"command docs mixture of valid and invalid commands": {
 			input: []string{"DOCS", "SET", "INVALID_CMD"},
 			migratedOutput: EvalResponse{
-				Result: []interface{}([]interface{}{[]interface{}{"set", []interface{}{"summary", "SET puts a new <key, value> pair in db as in the args\n\t\targs must contain key and value.\n\t\targs can also contain multiple options -\n\t\tEX or ex which will set the expiry time(in secs) for the key\n\t\tReturns encoded error response if at least a <key, value> pair is not part of args\n\t\tReturns encoded error response if expiry tme value in not integer\n\t\tReturns encoded OK RESP once new entry is added\n\t\tIf the key already exists then the value will be overwritten and expiry will be discarded", "arity", -3, "beginIndex", 1, "lastIndex", 0, "step", 0}}}),
+				Result: []interface{}([]interface{}{[]interface{}{"set", []interface{}{"summary", "SET puts a new <key, value> pair in db as in the args
+		args must contain key and value.
+		args can also contain multiple options -
+		EX or ex which will set the expiry time(in secs) for the key
+		Returns encoded error response if at least a <key, value> pair is not part of args
+		Returns encoded error response if expiry tme value in not integer
+		Returns encoded OK RESP once new entry is added
+		If the key already exists then the value will be overwritten and expiry will be discarded", "arity", -3, "beginIndex", 1, "lastIndex", 0, "step", 0}}}),
 				Error:  nil,
 			},
 		},
@@ -7972,7 +8052,8 @@ func testEvalHINCRBYFLOAT(t *testing.T, store *dstore.Store) {
 				store.Put(key, obj)
 			},
 			input:          []string{"key", "field", "a"},
-			output:         []byte("-ERR value is not an integer or a float\r\n"),
+			output:         []byte("-ERR value is not an integer or a float
+"),
 			migratedOutput: EvalResponse{Result: nil, Error: diceerrors.ErrInvalidNumberFormat},
 		},
 		"HINCRBYFLOAT on a field with non-numeric value": {

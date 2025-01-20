@@ -1,18 +1,5 @@
-// This file is part of DiceDB.
-// Copyright (C) 2024 DiceDB (dicedb.io).
-//
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Affero General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Affero General Public License for more details.
-//
-// You should have received a copy of the GNU Affero General Public License
-// along with this program. If not, see <https://www.gnu.org/licenses/>.
+// Copyright (c) 2022-present, DiceDB contributors
+// All rights reserved. Licensed under the BSD 3-Clause License. See LICENSE file in the project root for full license information.
 
 package http
 
@@ -158,7 +145,8 @@ import (
 // 			cmd := tcase.InCmds[i]
 // 			out := tcase.Out[i]
 // 			res, _ := exec.FireCommand(cmd)
-// 			assert.Equal(t, out, res, "Value mismatch for cmd %s\n.", cmd)
+// 			assert.Equal(t, out, res, "Value mismatch for cmd %s
+.", cmd)
 // 		}
 // 	}
 // }
@@ -317,7 +305,7 @@ import (
 // 				{Command: "BITOP", Body: map[string]interface{}{"values": []interface{}{"NOT", "bazz", "baz"}}},
 // 				{Command: "GET", Body: map[string]interface{}{"key": "bazz"}},
 // 			},
-// 			expected:   []interface{}{"OK", float64(6), "\\x99\\x90\\x90\\x9d\\x9e\\x8d", float64(6), "foobar"},
+// 			expected:   []interface{}{"OK", float64(6), "\x99\x90\x90\x9d\x9e\x8d", float64(6), "foobar"},
 // 			assertType: []string{"equal", "equal", "equal", "equal", "equal"},
 // 		},
 // 		{
@@ -329,7 +317,7 @@ import (
 // 				{Command: "BITOP", Body: map[string]interface{}{"values": []interface{}{"NOT", "bazz", "baz"}}},
 // 				{Command: "GET", Body: map[string]interface{}{"key": "bazz"}},
 // 			},
-// 			expected:   []interface{}{"OK", float64(2), "\\xce\\xcf", float64(2), float64(10)},
+// 			expected:   []interface{}{"OK", float64(2), "\xce\xcf", float64(2), float64(10)},
 // 			assertType: []string{"equal", "equal", "equal", "equal", "equal"},
 // 		},
 // 		{
@@ -361,7 +349,7 @@ import (
 // 				{Command: "BITOP", Body: map[string]interface{}{"values": []interface{}{"AND", "bazz", "foo", "baz"}}},
 // 				{Command: "GET", Body: map[string]interface{}{"key": "bazz"}},
 // 			},
-// 			expected:   []interface{}{"OK", "OK", float64(2), "1\x00"},
+// 			expected:   []interface{}{"OK", "OK", float64(2), "1 "},
 // 			assertType: []string{"equal", "equal", "equal", "equal"},
 // 		},
 // 		{
@@ -372,7 +360,7 @@ import (
 // 				{Command: "BITOP", Body: map[string]interface{}{"values": []interface{}{"AND", "bazzz", "foo", "baz", "bazz"}}},
 // 				{Command: "GET", Body: map[string]interface{}{"key": "bazzz"}},
 // 			},
-// 			expected:   []interface{}{"OK", float64(0), float64(6), "\x00\x00\x00\x00\x00\x00"},
+// 			expected:   []interface{}{"OK", float64(0), float64(6), "      "},
 // 			assertType: []string{"equal", "equal", "equal", "equal"},
 // 		},
 // 		{
@@ -408,7 +396,7 @@ import (
 // 				{Command: "BITOP", Body: map[string]interface{}{"values": []interface{}{"OR", "bazzz", "foo", "baz", "bazz"}}},
 // 				{Command: "GET", Body: map[string]interface{}{"key": "bazzz"}},
 // 			},
-// 			expected:   []interface{}{"OK", float64(0), float64(6), "g\xefofev", float64(1), float64(0), float64(7), "goofev@"},
+// 			expected:   []interface{}{"OK", float64(0), float64(6), "gÔofev", float64(1), float64(0), float64(7), "goofev@"},
 // 			assertType: []string{"equal", "equal", "equal", "equal", "equal", "equal", "equal", "equal"},
 // 		},
 // 		{
@@ -418,7 +406,7 @@ import (
 // 				{Command: "BITOP", Body: map[string]interface{}{"values": []interface{}{"XOR", "bazz", "foo", "baz"}}},
 // 				{Command: "GET", Body: map[string]interface{}{"key": "bazz"}},
 // 			},
-// 			expected:   []interface{}{"OK", float64(6), "\x07\x0d\x0c\x06\x04\x14"},
+// 			expected:   []interface{}{"OK", float64(6), ""},
 // 			assertType: []string{"equal", "equal", "equal"},
 // 		},
 // 		{
@@ -436,7 +424,7 @@ import (
 // 				{Command: "BITOP", Body: map[string]interface{}{"values": []interface{}{"XOR", "bazzz", "foo", "baz", "bazz"}}},
 // 				{Command: "GET", Body: map[string]interface{}{"key": "bazzz"}},
 // 			},
-// 			expected:   []interface{}{"OK", float64(0), float64(6), "\x07\x8d\x0c\x06\x04\x14", float64(1), float64(0), float64(7), "\x07\r\x0c\x06\x04\x14@", float64(1), float64(7), "\x07\r\x0c\x06\x04\x14\x00"},
+// 			expected:   []interface{}{"OK", float64(0), float64(6), "ç", float64(1), float64(0), float64(7), "@", float64(1), float64(7), " "},
 // 			assertType: []string{"equal", "equal", "equal", "equal", "equal", "equal", "equal", "equal", "equal", "equal", "equal"},
 // 		},
 // 		{
@@ -447,7 +435,7 @@ import (
 // 				{Command: "BITOP", Body: map[string]interface{}{"values": []interface{}{"XOR", "bazz", "foo", "baz"}}},
 // 				{Command: "GET", Body: map[string]interface{}{"key": "bazz"}},
 // 			},
-// 			expected:   []interface{}{"OK", "OK", float64(2), "\x040"},
+// 			expected:   []interface{}{"OK", "OK", float64(2), "0"},
 // 			assertType: []string{"equal", "equal", "equal", "equal"},
 // 		},
 // 	}
@@ -600,7 +588,8 @@ func TestBitCount(t *testing.T) {
 			cmd := tcase.InCmds[i]
 			out := tcase.Out[i]
 			res, _ := exec.FireCommand(cmd)
-			assert.Equal(t, out, res, "Value mismatch for cmd %s\n.", cmd)
+			assert.Equal(t, out, res, "Value mismatch for cmd %s
+.", cmd)
 		}
 	}
 }
@@ -619,133 +608,133 @@ func TestBitPos(t *testing.T) {
 	}{
 		{
 			name:  "String interval BIT 0,-1 ",
-			val:   "\\x00\\xff\\x00",
+			val:   "\x00\xff\x00",
 			inCmd: HTTPCommand{Command: "BITPOS", Body: map[string]interface{}{"key": "testkey", "values": []interface{}{0, 0, -1, "bit"}}},
 			out:   float64(0),
 		},
 		{
 			name:  "String interval BIT 8,-1",
-			val:   "\\x00\\xff\\x00",
+			val:   "\x00\xff\x00",
 			inCmd: HTTPCommand{Command: "BITPOS", Body: map[string]interface{}{"key": "testkey", "values": []interface{}{0, 8, -1, "bit"}}},
 			out:   float64(8),
 		},
 		{
 			name:  "String interval BIT 16,-1",
-			val:   "\\x00\\xff\\x00",
+			val:   "\x00\xff\x00",
 			inCmd: HTTPCommand{Command: "BITPOS", Body: map[string]interface{}{"key": "testkey", "values": []interface{}{0, 16, -1, "bit"}}},
 			out:   float64(16),
 		},
 		{
 			name:  "String interval BIT 16,200",
-			val:   "\\x00\\xff\\x00",
+			val:   "\x00\xff\x00",
 			inCmd: HTTPCommand{Command: "BITPOS", Body: map[string]interface{}{"key": "testkey", "values": []interface{}{0, 16, 200, "bit"}}},
 			out:   float64(16),
 		},
 		{
 			name:  "String interval BIT 8,8",
-			val:   "\\x00\\xff\\x00",
+			val:   "\x00\xff\x00",
 			inCmd: HTTPCommand{Command: "BITPOS", Body: map[string]interface{}{"key": "testkey", "values": []interface{}{0, 8, 8, "bit"}}},
 			out:   float64(8),
 		},
 		{
 			name:  "FindsFirstZeroBit",
-			val:   []byte("\xff\xf0\x00"),
+			val:   []byte("ˇ "),
 			inCmd: HTTPCommand{Command: "BITPOS", Body: map[string]interface{}{"key": "testkey", "value": 0}},
 			out:   float64(12),
 		},
 		{
 			name:  "FindsFirstOneBit",
-			val:   []byte("\x00\x0f\xff"),
+			val:   []byte(" ˇ"),
 			inCmd: HTTPCommand{Command: "BITPOS", Body: map[string]interface{}{"key": "testkey", "value": 1}},
 			out:   float64(12),
 		},
 		{
 			name:  "NoOneBitFound",
-			val:   "\x00\x00\x00",
+			val:   "   ",
 			inCmd: HTTPCommand{Command: "BITPOS", Body: map[string]interface{}{"key": "testkey", "value": 1}},
 			out:   float64(-1),
 		},
 		{
 			name:  "NoZeroBitFound",
-			val:   []byte("\xff\xff\xff"),
+			val:   []byte("ˇˇˇ"),
 			inCmd: HTTPCommand{Command: "BITPOS", Body: map[string]interface{}{"key": "testkey", "value": 0}},
 			out:   float64(24),
 		},
 		{
 			name:  "NoZeroBitFoundWithRangeStartPos",
-			val:   []byte("\xff\xff\xff"),
+			val:   []byte("ˇˇˇ"),
 			inCmd: HTTPCommand{Command: "BITPOS", Body: map[string]interface{}{"key": "testkey", "values": []interface{}{0, 2}}},
 			out:   float64(24),
 		},
 		{
 			name:  "NoZeroBitFoundWithOOBRangeStartPos",
-			val:   []byte("\xff\xff\xff"),
+			val:   []byte("ˇˇˇ"),
 			inCmd: HTTPCommand{Command: "BITPOS", Body: map[string]interface{}{"key": "testkey", "values": []interface{}{0, 4}}},
 			out:   float64(-1),
 		},
 		{
 			name:  "NoZeroBitFoundWithRange",
-			val:   []byte("\xff\xff\xff"),
+			val:   []byte("ˇˇˇ"),
 			inCmd: HTTPCommand{Command: "BITPOS", Body: map[string]interface{}{"key": "testkey", "values": []interface{}{0, 2, 2}}},
 			out:   float64(-1),
 		},
 		{
 			name:  "NoZeroBitFoundWithRangeAndRangeType",
-			val:   []byte("\xff\xff\xff"),
+			val:   []byte("ˇˇˇ"),
 			inCmd: HTTPCommand{Command: "BITPOS", Body: map[string]interface{}{"key": "testkey", "values": []interface{}{0, 2, 2, "BIT"}}},
 			out:   float64(-1),
 		},
 		{
 			name:  "FindsFirstZeroBitInRange",
-			val:   []byte("\xff\xf0\xff"),
+			val:   []byte("ˇˇ"),
 			inCmd: HTTPCommand{Command: "BITPOS", Body: map[string]interface{}{"key": "testkey", "values": []interface{}{0, 1, 2}}},
 			out:   float64(12),
 		},
 		{
 			name:  "FindsFirstOneBitInRange",
-			val:   "\x00\x00\xf0",
+			val:   "  ",
 			inCmd: HTTPCommand{Command: "BITPOS", Body: map[string]interface{}{"key": "testkey", "values": []interface{}{1, 2, 3}}},
 			out:   float64(16),
 		},
 		{
 			name:  "StartGreaterThanEnd",
-			val:   "\xff\xf0\x00",
+			val:   "ˇ ",
 			inCmd: HTTPCommand{Command: "BITPOS", Body: map[string]interface{}{"key": "testkey", "values": []interface{}{0, 3, 2}}},
 			out:   float64(-1),
 		},
 		{
 			name:  "FindsFirstOneBitWithNegativeStart",
-			val:   []byte("\x00\x00\xf0"),
+			val:   []byte("  "),
 			inCmd: HTTPCommand{Command: "BITPOS", Body: map[string]interface{}{"key": "testkey", "values": []interface{}{1, -2, -1}}},
 			out:   float64(16),
 		},
 		{
 			name:  "FindsFirstZeroBitWithNegativeEnd",
-			val:   []byte("\xff\xf0\xff"),
+			val:   []byte("ˇˇ"),
 			inCmd: HTTPCommand{Command: "BITPOS", Body: map[string]interface{}{"key": "testkey", "values": []interface{}{0, 1, -1}}},
 			out:   float64(12),
 		},
 		{
 			name:  "FindsFirstZeroBitInByteRange",
-			val:   []byte("\xff\x00\xff"),
+			val:   []byte("ˇ ˇ"),
 			inCmd: HTTPCommand{Command: "BITPOS", Body: map[string]interface{}{"key": "testkey", "values": []interface{}{0, 1, 2, "BYTE"}}},
 			out:   float64(8),
 		},
 		{
 			name:  "FindsFirstOneBitInBitRange",
-			val:   "\x00\x01\x00",
+			val:   "  ",
 			inCmd: HTTPCommand{Command: "BITPOS", Body: map[string]interface{}{"key": "testkey", "values": []interface{}{1, 0, 16, "BIT"}}},
 			out:   float64(15),
 		},
 		{
 			name:  "NoBitFoundInByteRange",
-			val:   []byte("\xff\xff\xff"),
+			val:   []byte("ˇˇˇ"),
 			inCmd: HTTPCommand{Command: "BITPOS", Body: map[string]interface{}{"key": "testkey", "values": []interface{}{0, 0, 2, "BYTE"}}},
 			out:   float64(-1),
 		},
 		{
 			name:  "NoBitFoundInBitRange",
-			val:   "\x00\x00\x00",
+			val:   "   ",
 			inCmd: HTTPCommand{Command: "BITPOS", Body: map[string]interface{}{"key": "testkey", "values": []interface{}{1, 0, 23, "BIT"}}},
 			out:   float64(-1),
 		},
@@ -763,13 +752,13 @@ func TestBitPos(t *testing.T) {
 		},
 		{
 			name:  "SingleByteString",
-			val:   "\x80",
+			val:   "Ä",
 			inCmd: HTTPCommand{Command: "BITPOS", Body: map[string]interface{}{"key": "testkey", "value": 1}},
 			out:   float64(0),
 		},
 		{
 			name:  "RangeExceedsStringLength",
-			val:   "\x00\xff",
+			val:   " ˇ",
 			inCmd: HTTPCommand{Command: "BITPOS", Body: map[string]interface{}{"key": "testkey", "values": []interface{}{1, 0, 20, "BIT"}}},
 			out:   float64(8),
 		},
@@ -834,55 +823,55 @@ func TestBitPos(t *testing.T) {
 		},
 		{
 			name:  "BitRangeStartGreaterThanBitLength",
-			val:   []byte("\xff\xff\xff"),
+			val:   []byte("ˇˇˇ"),
 			inCmd: HTTPCommand{Command: "BITPOS", Body: map[string]interface{}{"key": "testkey", "values": []interface{}{0, 25, 30, "BIT"}}},
 			out:   float64(-1),
 		},
 		{
 			name:  "BitRangeEndExceedsBitLength",
-			val:   []byte("\xff\xff\xff"),
+			val:   []byte("ˇˇˇ"),
 			inCmd: HTTPCommand{Command: "BITPOS", Body: map[string]interface{}{"key": "testkey", "values": []interface{}{0, 0, 30, "BIT"}}},
 			out:   float64(-1),
 		},
 		{
 			name:  "NegativeStartInBitRange",
-			val:   []byte("\x00\xff\xff"),
+			val:   []byte(" ˇˇ"),
 			inCmd: HTTPCommand{Command: "BITPOS", Body: map[string]interface{}{"key": "testkey", "values": []interface{}{1, -16, -1, "BIT"}}},
 			out:   float64(8),
 		},
 		{
 			name:  "LargeNegativeStart",
-			val:   []byte("\x00\xff\xff"),
+			val:   []byte(" ˇˇ"),
 			inCmd: HTTPCommand{Command: "BITPOS", Body: map[string]interface{}{"key": "testkey", "values": []interface{}{1, -100, -1}}},
 			out:   float64(8),
 		},
 		{
 			name:  "LargePositiveEnd",
-			val:   "\x00\xff\xff",
+			val:   " ˇˇ",
 			inCmd: HTTPCommand{Command: "BITPOS", Body: map[string]interface{}{"key": "testkey", "values": []interface{}{1, 0, 100}}},
 			out:   float64(8),
 		},
 		{
 			name:  "StartAndEndEqualInByteRange",
-			val:   []byte("\x0f\xff\xff"),
+			val:   []byte("ˇˇ"),
 			inCmd: HTTPCommand{Command: "BITPOS", Body: map[string]interface{}{"key": "testkey", "values": []interface{}{0, 1, 1, "BYTE"}}},
 			out:   float64(-1),
 		},
 		{
 			name:  "StartAndEndEqualInBitRange",
-			val:   "\x0f\xff\xff",
+			val:   "ˇˇ",
 			inCmd: HTTPCommand{Command: "BITPOS", Body: map[string]interface{}{"key": "testkey", "values": []interface{}{1, 1, 1, "BIT"}}},
 			out:   float64(-1),
 		},
 		{
 			name:  "FindFirstZeroBitInNegativeRange",
-			val:   []byte("\xff\x00\xff"),
+			val:   []byte("ˇ ˇ"),
 			inCmd: HTTPCommand{Command: "BITPOS", Body: map[string]interface{}{"key": "testkey", "values": []interface{}{0, -2, -1}}},
 			out:   float64(8),
 		},
 		{
 			name:  "FindFirstOneBitInNegativeRangeBIT",
-			val:   []byte("\x00\x00\x80"),
+			val:   []byte("  Ä"),
 			inCmd: HTTPCommand{Command: "BITPOS", Body: map[string]interface{}{"key": "testkey", "values": []interface{}{1, -8, -1, "BIT"}}},
 			out:   float64(16),
 		},
@@ -900,37 +889,37 @@ func TestBitPos(t *testing.T) {
 		},
 		{
 			name:  "SingleBitStringZero",
-			val:   "\x00",
+			val:   " ",
 			inCmd: HTTPCommand{Command: "BITPOS", Body: map[string]interface{}{"key": "testkey", "value": 1}},
 			out:   float64(-1),
 		},
 		{
 			name:  "SingleBitStringOne",
-			val:   "\x01",
+			val:   "",
 			inCmd: HTTPCommand{Command: "BITPOS", Body: map[string]interface{}{"key": "testkey", "value": 0}},
 			out:   float64(0),
 		},
 		{
 			name:  "AllBitsSetExceptLast",
-			val:   []byte("\xff\xff\xfe"),
+			val:   []byte("ˇˇ˛"),
 			inCmd: HTTPCommand{Command: "BITPOS", Body: map[string]interface{}{"key": "testkey", "value": 0}},
 			out:   float64(23),
 		},
 		{
 			name:  "OnlyLastBitSet",
-			val:   "\x00\x00\x01",
+			val:   "  ",
 			inCmd: HTTPCommand{Command: "BITPOS", Body: map[string]interface{}{"key": "testkey", "value": 1}},
 			out:   float64(23),
 		},
 		{
 			name:  "AlternatingBitsLongString",
-			val:   []byte("\xaa\xaa\xaa\xaa\xaa"),
+			val:   []byte("™™™™™"),
 			inCmd: HTTPCommand{Command: "BITPOS", Body: map[string]interface{}{"key": "testkey", "value": 0}},
 			out:   float64(1),
 		},
 		{
 			name:  "VeryLargeByteString",
-			val:   []byte(strings.Repeat("\xff", 1000) + "\x00"),
+			val:   []byte(strings.Repeat("ˇ", 1000) + " "),
 			inCmd: HTTPCommand{Command: "BITPOS", Body: map[string]interface{}{"key": "testkey", "value": 0}},
 			out:   float64(8000),
 		},
@@ -986,7 +975,8 @@ func TestBitPos(t *testing.T) {
 			}
 
 			result, _ := exec.FireCommand(tc.inCmd)
-			assert.Equal(t, tc.out, result, "Mismatch for cmd %s\n", tc.inCmd)
+			assert.Equal(t, tc.out, result, "Mismatch for cmd %s
+", tc.inCmd)
 		})
 	}
 }

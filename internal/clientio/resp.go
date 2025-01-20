@@ -1,18 +1,5 @@
-// This file is part of DiceDB.
-// Copyright (C) 2024 DiceDB (dicedb.io).
-//
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Affero General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Affero General Public License for more details.
-//
-// You should have received a copy of the GNU Affero General Public License
-// along with this program. If not, see <https://www.gnu.org/licenses/>.
+// Copyright (c) 2022-present, DiceDB contributors
+// All rights reserved. Licensed under the BSD 3-Clause License. See LICENSE file in the project root for full license information.
 
 package clientio
 
@@ -44,14 +31,22 @@ const (
 	EmptyArray                         // Represents an empty array in RESP format.
 )
 
-var RespNIL = []byte("$-1\r\n")
-var RespOK = []byte("+OK\r\n")
-var RespQueued = []byte("+QUEUED\r\n")
-var RespZero = []byte(":0\r\n")
-var RespOne = []byte(":1\r\n")
-var RespMinusOne = []byte(":-1\r\n")
-var RespMinusTwo = []byte(":-2\r\n")
-var RespEmptyArray = []byte("*0\r\n")
+var RespNIL = []byte("$-1
+")
+var RespOK = []byte("+OK
+")
+var RespQueued = []byte("+QUEUED
+")
+var RespZero = []byte(":0
+")
+var RespOne = []byte(":1
+")
+var RespMinusOne = []byte(":-1
+")
+var RespMinusTwo = []byte(":-2
+")
+var RespEmptyArray = []byte("*0
+")
 
 func readLength(buf *bytes.Buffer) (int64, error) {
 	s, err := readStringUntilSr(buf)
@@ -78,15 +73,18 @@ func readStringUntilSr(buf *bytes.Buffer) (string, error) {
 
 		result = append(result, byteRead)
 
-		// If we find '\r', we check the next byte for '\n'
-		if byteRead == '\r' {
+		// If we find '', we check the next byte for '
+'
+		if byteRead == '' {
 			nextByte, err := buf.ReadByte() // Peek the next byte
 			if err != nil {
 				return utils.EmptyStr, err
 			}
 
-			// If the next byte is '\n', we've found a valid end of string
-			if nextByte == '\n' {
+			// If the next byte is '
+', we've found a valid end of string
+			if nextByte == '
+' {
 				break
 			}
 
@@ -94,7 +92,7 @@ func readStringUntilSr(buf *bytes.Buffer) (string, error) {
 			result = append(result, nextByte)
 		}
 	}
-	// Return without the last '\r'
+	// Return without the last ''
 	return string(result[:len(result)-1]), nil
 }
 
@@ -147,7 +145,8 @@ func readBulkString(c io.ReadWriter, buf *bytes.Buffer) (string, error) {
 		return "(nil)", nil
 	}
 
-	bytesRem := l + 2 // 2 for \r\n
+	bytesRem := l + 2 // 2 for 
+
 	bytesRem -= int64(buf.Len())
 	for bytesRem > 0 {
 		tbuf := make([]byte, bytesRem)
@@ -164,7 +163,8 @@ func readBulkString(c io.ReadWriter, buf *bytes.Buffer) (string, error) {
 		return utils.EmptyStr, err
 	}
 
-	// moving buffer pointer by 2 for \r and \n
+	// moving buffer pointer by 2 for  and 
+
 	if _, err := buf.ReadByte(); err != nil {
 		return utils.EmptyStr, err
 	}
@@ -198,12 +198,15 @@ func readArray(buf *bytes.Buffer, rp *RESPParser) (interface{}, error) {
 }
 
 func encodeString(v string) []byte {
-	return []byte(fmt.Sprintf("$%d\r\n%s\r\n", len(v), v))
+	return []byte(fmt.Sprintf("$%d
+%s
+", len(v), v))
 }
 
 // encodeBool encodes bool as simple strings
 func encodeBool(v bool) []byte {
-	return []byte(fmt.Sprintf("+%t\r\n", v))
+	return []byte(fmt.Sprintf("+%t
+", v))
 }
 
 func Encode(value interface{}, isSimple bool) []byte {
@@ -220,12 +223,14 @@ func Encode(value interface{}, isSimple bool) []byte {
 	case string:
 		// encode as simple strings
 		if isSimple || v == "[" || v == "{" {
-			return []byte(fmt.Sprintf("+%s\r\n", v))
+			return []byte(fmt.Sprintf("+%s
+", v))
 		}
 		// encode as bulk strings
 		return encodeString(v)
 	case int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64:
-		return []byte(fmt.Sprintf(":%d\r\n", v)) // Prefix with ':' for RESP integers.
+		return []byte(fmt.Sprintf(":%d
+", v)) // Prefix with ':' for RESP integers.
 
 	// Handle floating-point types similarly to integers.
 	case float32, float64:
@@ -235,7 +240,8 @@ func Encode(value interface{}, isSimple bool) []byte {
 		// Therefore, we need to check if value is an integer
 		intValue, isInteger := utils.IsFloatToIntPossible(v.(float64))
 		if isInteger {
-			return []byte(fmt.Sprintf(":%d\r\n", intValue))
+			return []byte(fmt.Sprintf(":%d
+", intValue))
 		}
 
 		// if it is a float, encode like a string
@@ -249,7 +255,8 @@ func Encode(value interface{}, isSimple bool) []byte {
 		for _, b := range value.([]string) {
 			buf.Write(encodeString(b)) // Encode each string and write to the buffer.
 		}
-		return []byte(fmt.Sprintf("*%d\r\n%s", len(v), buf.Bytes())) // Return the encoded response.
+		return []byte(fmt.Sprintf("*%d
+%s", len(v), buf.Bytes())) // Return the encoded response.
 
 	// Handle slices of custom objects (Obj).
 	case []*object.Obj:
@@ -258,7 +265,8 @@ func Encode(value interface{}, isSimple bool) []byte {
 		for _, b := range value.([]*object.Obj) {
 			buf.Write(Encode(b.Value, false)) // Encode each object’s value and write to the buffer.
 		}
-		return []byte(fmt.Sprintf("*%d\r\n%s", len(v), buf.Bytes())) // Return the encoded response.
+		return []byte(fmt.Sprintf("*%d
+%s", len(v), buf.Bytes())) // Return the encoded response.
 
 	// Handle slices of interfaces.
 	case []interface{}:
@@ -267,7 +275,8 @@ func Encode(value interface{}, isSimple bool) []byte {
 		for _, elem := range v {
 			buf.Write(Encode(elem, false)) // Encode each element and write to the buffer.
 		}
-		return []byte(fmt.Sprintf("*%d\r\n%s", len(v), buf.Bytes())) // Return the encoded response.
+		return []byte(fmt.Sprintf("*%d
+%s", len(v), buf.Bytes())) // Return the encoded response.
 
 	// Handle slices of int64.
 	case []int64:
@@ -276,7 +285,8 @@ func Encode(value interface{}, isSimple bool) []byte {
 		for _, b := range value.([]int64) {
 			buf.Write(Encode(b, false)) // Encode each int64 and write to the buffer.
 		}
-		return []byte(fmt.Sprintf("*%d\r\n%s", len(v), buf.Bytes())) // Return the encoded response.
+		return []byte(fmt.Sprintf("*%d
+%s", len(v), buf.Bytes())) // Return the encoded response.
 
 	case []uint64:
 		var b []byte
@@ -284,18 +294,21 @@ func Encode(value interface{}, isSimple bool) []byte {
 		for _, b := range value.([]uint64) {
 			buf.Write(Encode(b, false)) // Encode each uint64 and write to the buffer.
 		}
-		return []byte(fmt.Sprintf("*%d\r\n%s", len(v), buf.Bytes())) // Return the encoded response.
+		return []byte(fmt.Sprintf("*%d
+%s", len(v), buf.Bytes())) // Return the encoded response.
 
 	// Handle error type by formatting it as a RESP error.
 	case error:
-		return []byte(fmt.Sprintf("-%s\r\n", v))
+		return []byte(fmt.Sprintf("-%s
+", v))
 	case dstore.QueryWatchEvent:
 		var b []byte
 		buf := bytes.NewBuffer(b)
 		we := value.(dstore.QueryWatchEvent)
 		buf.Write(Encode(fmt.Sprintf("key:%s", we.Key), false))
 		buf.Write(Encode(fmt.Sprintf("op:%s", we.Operation), false))
-		return []byte(fmt.Sprintf("*2\r\n%s", buf.Bytes()))
+		return []byte(fmt.Sprintf("*2
+%s", buf.Bytes()))
 
 	// Handle map[string]bool and return a nil response indicating unsupported types.
 	case map[string]bool:

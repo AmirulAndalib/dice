@@ -1,18 +1,5 @@
-// This file is part of DiceDB.
-// Copyright (C) 2024 DiceDB (dicedb.io).
-//
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Affero General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Affero General Public License for more details.
-//
-// You should have received a copy of the GNU Affero General Public License
-// along with this program. If not, see <https://www.gnu.org/licenses/>.
+// Copyright (c) 2022-present, DiceDB contributors
+// All rights reserved. Licensed under the BSD 3-Clause License. See LICENSE file in the project root for full license information.
 
 package errors
 
@@ -59,7 +46,8 @@ func newDiceErr(message string) *DiceError {
 }
 
 func (d *DiceError) toEncodedMessage() []byte {
-	return []byte(fmt.Sprintf("%s\r\n", d.message.Error()))
+	return []byte(fmt.Sprintf("%s
+", d.message.Error()))
 }
 
 func NewErr(message string) error {
@@ -68,7 +56,8 @@ func NewErr(message string) error {
 
 // NewErrWithMessage If the error code is already passed in the string,
 // the error code provided is used, otherwise the string "-ERR " for the generic
-// error code is automatically added. Note that 's' must NOT end with \r\n.
+// error code is automatically added. Note that 's' must NOT end with 
+.
 func NewErrWithMessage(errMsg string) []byte {
 	// If the string already starts with "-..." then the error code
 	// is provided by the caller. Otherwise, we use "-ERR".

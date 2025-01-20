@@ -1,18 +1,5 @@
-// This file is part of DiceDB.
-// Copyright (C) 2024 DiceDB (dicedb.io).
-//
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Affero General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Affero General Public License for more details.
-//
-// You should have received a copy of the GNU Affero General Public License
-// along with this program. If not, see <https://www.gnu.org/licenses/>.
+// Copyright (c) 2022-present, DiceDB contributors
+// All rights reserved. Licensed under the BSD 3-Clause License. See LICENSE file in the project root for full license information.
 
 package netconn
 
@@ -97,41 +84,55 @@ func TestNetConnIOHandler(t *testing.T) {
 	}{
 		{
 			name:          "Simple read and write",
-			readData:      []byte("Hello, World!\r\n"),
-			expectedRead:  []byte("Hello, World!\r\n"),
-			expectedWrite: []byte("Response\r\n"),
+			readData:      []byte("Hello, World!
+"),
+			expectedRead:  []byte("Hello, World!
+"),
+			expectedWrite: []byte("Response
+"),
 		},
 		{
 			name:            "Read error",
 			readErr:         errors.New("read error"),
 			expectedReadErr: errors.New("error reading request: read error"),
-			expectedWrite:   []byte("Response\r\n"),
+			expectedWrite:   []byte("Response
+"),
 		},
 		{
 			name:             "Write error",
-			readData:         []byte("Hello, World!\r\n"),
-			expectedRead:     []byte("Hello, World!\r\n"),
+			readData:         []byte("Hello, World!
+"),
+			expectedRead:     []byte("Hello, World!
+"),
 			writeErr:         errors.New("write error"),
-			response:         []byte("Hello, World!\r\n"),
+			response:         []byte("Hello, World!
+"),
 			expectedWriteErr: errors.New("error writing response: write error"),
 		},
 		{
 			name:          "Large data read",
 			readData:      bytes.Repeat([]byte("a"), 1000),
 			expectedRead:  bytes.Repeat([]byte("a"), 1000),
-			expectedWrite: []byte("Response\r\n"),
+			expectedWrite: []byte("Response
+"),
 		},
 		{
 			name:            "Empty read",
 			readData:        []byte{},
 			expectedReadErr: io.EOF,
-			expectedWrite:   []byte("Response\r\n"),
+			expectedWrite:   []byte("Response
+"),
 		},
 		{
 			name:          "Read with multiple chunks",
-			readData:      []byte("Hello\r\nWorld\r\n"),
-			expectedRead:  []byte("Hello\r\nWorld\r\n"),
-			expectedWrite: []byte("Response\r\n"),
+			readData:      []byte("Hello
+World
+"),
+			expectedRead:  []byte("Hello
+World
+"),
+			expectedWrite: []byte("Response
+"),
 		},
 	}
 
@@ -174,7 +175,8 @@ func TestNetConnIOHandler(t *testing.T) {
 
 			// Test WriteResponse
 			if tt.response == nil {
-				tt.response = []byte("Response\r\n")
+				tt.response = []byte("Response
+")
 			}
 
 			err = handler.Write(ctx, tt.response)
