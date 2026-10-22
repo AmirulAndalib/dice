@@ -1,6 +1,6 @@
 module github.com/dicedb/dice
 
-go 1.23.0
+go 1.25.0
 
 require gotest.tools/v3 v3.5.1
 
@@ -22,9 +22,9 @@ require (
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	golang.org/x/arch v0.11.0 // indirect
-	golang.org/x/net v0.23.0 // indirect
-	golang.org/x/sys v0.27.0 // indirect
-	golang.org/x/text v0.20.0 // indirect
+	golang.org/x/net v0.55.0 // indirect
+	golang.org/x/sys v0.45.0 // indirect
+	golang.org/x/text v0.37.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
@@ -49,8 +49,7 @@ require (
 	github.com/rs/zerolog v1.33.0
 	github.com/stretchr/testify v1.9.0
 	github.com/twmb/murmur3 v1.1.8
-	github.com/xwb1989/sqlparser v0.0.0-20180606152119-120387863bf2
-	golang.org/x/crypto v0.29.0
+	golang.org/x/crypto v0.51.0
 	golang.org/x/exp v0.0.0-20241108190413-2d47ceb2692f
 	google.golang.org/protobuf v1.35.1
 )
