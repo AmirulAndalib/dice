@@ -12,15 +12,15 @@
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.1.6",
-    "@astrojs/starlight": "^0.26.3",
+    "@astrojs/starlight": "^0.42.7",
     "astro-analytics": "^2.7.0",
     "bulma": "^0.9.4",
     "lucide-astro": "^0.438.0",
     "sass": "^1.62.1",
-    "sharp": "^0.32.5"
+    "sharp": "^0.35.5"
   },
   "devDependencies": {
-    "astro": "^4.16.13",
+    "astro": "^7.4.2",
     "eslint": "^9.11.0",
     "eslint-plugin-astro": "^1.2.4",
     "prettier": "^3.3.3",
